@@ -1,5 +1,12 @@
+#include "node_modules/node-addon-api/napi.h"
+#include <cerrno>
 #include <napi.h>
 #include <sys/xattr.h>
+
+// #include <sys/types.h>
+
+// ssize_t getxattr(const char *path, const char *name, void *value, size_t size, u_int32_t position, int options);
+
 
 Napi::Value GetXAttr(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
@@ -28,12 +35,15 @@ Napi::Value GetXAttr(const Napi::CallbackInfo& info) {
   int result = getxattr(pathC, nameC, buffer, 1024);
 #endif
 
+
   if (result == -1) {
-    Napi::TypeError::New(env, "Error getting xattr").ThrowAsJavaScriptException();
+      const char *error = strerror(errno);
+    Napi::Error::New(env, error).ThrowAsJavaScriptException();
     return env.Null();
   }
 
   Napi::String value = Napi::String::New(env, buffer, result);
+  delete[] buffer;
 
   return value;
 }

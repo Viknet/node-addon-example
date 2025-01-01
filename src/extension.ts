@@ -20,7 +20,7 @@ export function activate(context: vscode.ExtensionContext) {
     const nativeModule = require("./addon.node");
 
     vscode.window.showInformationMessage(
-      `Result: ${nativeModule.getxattr("/Users/viknet/Downloads/steam.dmg", "com.apple.quarantine")}`,
+      `Result: ${nativeModule.getxattr("/Users/viknet/Downloads/steam.dm", "com.apple.quarantine")}`,
     );
   });
 
