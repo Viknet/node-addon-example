@@ -1,0 +1,3 @@
+[workspace]
+members = ["crates/addon-neon-src"]
+resolver = "2"
