@@ -1,12 +1,13 @@
 #include "node_modules/node-addon-api/napi.h"
 #include <cerrno>
 #include <napi.h>
-#include <sys/xattr.h>
+#include <sys/types.h>
 
-// #include <sys/types.h>
-
-// ssize_t getxattr(const char *path, const char *name, void *value, size_t size, u_int32_t position, int options);
-
+#ifdef __APPLE__
+extern "C" ssize_t getxattr(const char *path, const char *name, void *value, size_t size, u_int32_t position, int options);
+#elif  __linux__
+extern "C" ssize_t getxattr(const char *path, const char *name, void *value, size_t size);
+#endif
 
 Napi::Value GetXAttr(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
