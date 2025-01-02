@@ -4,12 +4,14 @@
 #include <sys/types.h>
 
 #ifdef __APPLE__
-extern "C" ssize_t getxattr(const char *path, const char *name, void *value, size_t size, u_int32_t position, int options);
-#elif  __linux__
-extern "C" ssize_t getxattr(const char *path, const char *name, void *value, size_t size);
+extern "C" ssize_t getxattr(const char *path, const char *name, void *value,
+                            size_t size, u_int32_t position, int options);
+#elif __linux__
+extern "C" ssize_t getxattr(const char *path, const char *name, void *value,
+                            size_t size);
 #endif
 
-Napi::Value GetXAttr(const Napi::CallbackInfo& info) {
+Napi::Value GetXAttr(const Napi::CallbackInfo &info) {
   Napi::Env env = info.Env();
 
   if (info.Length() < 2) {
@@ -32,13 +34,12 @@ Napi::Value GetXAttr(const Napi::CallbackInfo& info) {
   char *buffer = new char[1024];
 #ifdef __APPLE__
   int result = getxattr(pathC, nameC, buffer, 1024, 0, 0);
-#elif  __linux__
+#elif __linux__
   int result = getxattr(pathC, nameC, buffer, 1024);
 #endif
 
-
   if (result == -1) {
-      const char *error = strerror(errno);
+    const char *error = strerror(errno);
     Napi::Error::New(env, error).ThrowAsJavaScriptException();
     return env.Null();
   }
@@ -50,7 +51,8 @@ Napi::Value GetXAttr(const Napi::CallbackInfo& info) {
 }
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
-  exports.Set(Napi::String::New(env, "getxattr"), Napi::Function::New(env, GetXAttr));
+  exports.Set(Napi::String::New(env, "getxattr"),
+              Napi::Function::New(env, GetXAttr));
   return exports;
 }
 
